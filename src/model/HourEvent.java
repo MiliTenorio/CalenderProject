@@ -1,23 +1,21 @@
 package model;
-
-import java.sql.Time;
 import java.util.Date;
 
 public class HourEvent extends Event {
-	
-	Time time;
+	int idEvent;
+	String time;
 
-	public HourEvent(Date date, String name, Time time) {
-		super(date, name);
+	public HourEvent(int idEvent, Date date, String name, String time) {
+		super(idEvent, date, name);
 		// TODO Auto-generated constructor stub
 		this.time = time;
 	}
 
-	public Time getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Time time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

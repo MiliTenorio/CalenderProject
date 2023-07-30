@@ -1,35 +1,32 @@
 package model;
 
-import java.sql.Time;
 import java.util.Date;
 
 public class DurationEvent extends Event{
 	
-	Time initialTime;
-	Time finalTime;
+	String initialTime;
+	String finalTime;
 
-	public DurationEvent(Date date, String name, Time initialTime, Time finalTime) {
-		super(date, name);
+	public DurationEvent(int idEvent, Date date, String name, String initialTime, String finalTime) {
+		super(idEvent, date, name);
 		this.initialTime = initialTime;
 		this.finalTime = finalTime;
 	}
 
-	public Time getInitialTime() {
+	public String getInitialTime() {
 		return initialTime;
 	}
 
-	public void setInitialTime(Time initialTime) {
+	public void setInitialTime(String initialTime) {
 		this.initialTime = initialTime;
 	}
 
-	public Time getFinalTime() {
+	public String getFinalTime() {
 		return finalTime;
 	}
 
-	public void setFinalTime(Time finalTime) {
+	public void setFinalTime(String finalTime) {
 		this.finalTime = finalTime;
 	}
-	
-	
 
 }
