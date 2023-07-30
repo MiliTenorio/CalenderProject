@@ -1,8 +1,8 @@
 package view;
-//import java.util.Date;
 import java.util.Scanner;
 
 import controller.ControllerClass;
+import controller.InputData;
 import model.DurationEvent;
 import model.Event;
 import model.HourEvent;
@@ -26,8 +26,8 @@ public class ViewClass {
 		  	System.out.print("##---------- Menu -----------##\n\n");
 		  	System.out.print("|-----------------------------|\n");
 		  	System.out.print("| 1 - Add Event               |\n");
-		  	System.out.print("| 2 - Edit Event              |\n");
-		  	System.out.print("| 3 - See Event               |\n");
+		  	System.out.print("| 2 - See Events              |\n");
+		  	System.out.print("| 3 - Edit Event              |\n");
 		  	System.out.print("| 4 - Back to Menu            |\n");
 		  	System.out.print("| 0 - Exit                    |\n");
 		  	System.out.print("|-----------------------------|\n");
@@ -44,11 +44,11 @@ public class ViewClass {
 			  		break;
 			  		
 			  	case 2:
-			  		seeEvent();
+			  		seeEvents(scan);
 			  		break;
 			  		
 			  	case 3:
-			  		editEvent();
+			  		editEvent(scan);
 			  		break;
 			  		
 			  	default:
@@ -60,26 +60,9 @@ public class ViewClass {
   		System.out.println("Thanks for coming!");
 	}
 	
-	private static void seeEvent() {
-		// TODO Auto-generated method stub
-		System.out.println("Let's looking for some informations about your event");
-		
-		
-	}
-
-	private static void editEvent() {
-		// TODO Auto-generated method stub
-		System.out.println("Let's edit some information about your events");
-	}
 
 	private static void addEvent(Scanner scan) {
-		// TODO Auto-generated method stub
 		System.out.println("Let's add a new event:");
-					
-		/*if(theController.addEvent(theController.inputSimpleEventInformation(scan)) == false) {
-			System.out.println("Some problem happens :( ");
-			addEvent(scan);
-		}*/
 		
 		Event newEvent = theController.inputSimpleEventInformation(scan);
 		
@@ -117,15 +100,78 @@ public class ViewClass {
 		  		break;
 		  }
 		
-		
-		/*System.out.println("All Events:");
-	
-		for(Event eventList : theController.getAllEvents()) {
-			System.out.printf("Date: " + controller.ParseData.convertDateToString(eventList.getDateEvent()) + 
-					" Name: " + eventList.getNameEvent() + "\n");
-		}*/
-		
 	}
 
+	private static void seeEvents(Scanner scan) {
+		// TODO Auto-generated method stub
+		System.out.println("Let's looking for some informations about your event");
+	  	System.out.print("|--------------------------------------------|\n");
+	  	System.out.print("| 1 - Only one event                         |\n");
+	  	System.out.print("| 2 - All events                             |\n");
+	  	System.out.print("| 3 - All simple events                      |\n");
+	  	System.out.print("| 4 - All events with initial time           |\n");
+	  	System.out.print("| 5 - All events with inital and final time  |\n");
+	  	System.out.print("| 0 - Return to menu                         |\n");
+	  	System.out.print("|--------------------------------------------|\n");
+		
+		int option = controller.InputData.menuTypeShowEvent(scan);
+	  	
+	  	switch (option) {
+	  		case 0:
+	  			break;
+		  	case 1:
+		  		int id = InputData.inputId(scan);
+		  		controller.OutputData.showSimpleEvent(theController.findSimpleEvent(id));
+		  		break;
+		  		
+		  	case 2:
+		  		controller.OutputData.showEvents(theController, 0);
+		  		break;
+		  		
+		  	case 3:
+		  		controller.OutputData.showEvents(theController, 1);
+		  		break;
+		  		
+		  	case 4:
+		  		controller.OutputData.showEvents(theController, 2);
+		  		break;
+		  		
+		  	case 5:
+		  		controller.OutputData.showEvents(theController, 3);
+		  		break;
+		  }
+		
+	}
+	
+	private static void editEvent(Scanner scan) {//falta implementar a validação se o evento existe
+		// TODO Auto-generated method stub
+		System.out.println("Let's edit some information about your events");
+		System.out.println("What's is the type of the Event?");
+	  	System.out.print("|---------------------------------------|\n");
+	  	System.out.print("| 1 - Simple event                      |\n");
+	  	System.out.print("| 2 - Event with initial time           |\n");
+	  	System.out.print("| 3 - Event with inital and final time  |\n");
+	  	System.out.print("| 0 - Return to menu                    |\n");
+	  	System.out.print("|---------------------------------------|\n");
+	  	
+		int option = controller.InputData.menuTypeShowEvent(scan);
+	  	
+	  	switch (option) {
+	  		case 0:
+	  			break;
+		  	case 1:
+		  		InputData.editingSimpleEvent(scan, theController);
+		  		break;
+		  		
+		  	case 2:
+		  		InputData.editingHourEvent(scan, theController);
+		  		break;
+		  		
+		  	case 3:
+		  		InputData.editingDurationEvent(scan, theController);
+		  		break;
+		  }
+		
+	}
 
 }

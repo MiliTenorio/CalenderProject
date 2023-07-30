@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class ParseData {
 	
 	public static Date convertStringToDate(String dateString) {
@@ -22,4 +25,14 @@ public class ParseData {
         String dateString = format.format(date);
         return dateString;
     }
+    
+    public static LocalTime parseStringToTime(String timeString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return LocalTime.parse(timeString, formatter);
+    }
+    
+    public static String parseTimeToString(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
+    }    
 }

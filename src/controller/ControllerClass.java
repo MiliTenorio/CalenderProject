@@ -115,10 +115,10 @@ public class ControllerClass {
 		//Because problems to use Scanner, here add some examples of events:
 		events.add(new Event(0,ParseData.convertStringToDate("2023-02-01"),"Event 1"));
 		events.add(new Event(1,ParseData.convertStringToDate("2023-04-22"),"Event 2"));
-		events.add(new HourEvent(2,ParseData.convertStringToDate("2023-02-01"),"Event 3","9h10"));
-		events.add(new HourEvent(3,ParseData.convertStringToDate("2023-07-13"),"Event 4","15h30"));
-		events.add(new DurationEvent(4,ParseData.convertStringToDate("2023-10-01"),"Event 5","19h00","20h00"));
-		events.add(new DurationEvent(5,ParseData.convertStringToDate("2023-09-12"),"Event 6","18h30","19h45"));
+		hourEvents.add(new HourEvent(2,ParseData.convertStringToDate("2023-02-01"),"Event 3","9:10"));
+		hourEvents.add(new HourEvent(3,ParseData.convertStringToDate("2023-07-13"),"Event 4","15:30"));
+		durationEvents.add(new DurationEvent(4,ParseData.convertStringToDate("2023-10-01"),"Event 5","19:00","20:00"));
+		durationEvents.add(new DurationEvent(5,ParseData.convertStringToDate("2023-09-12"),"Event 6","18:30","19:45"));
 		
 		id = 6;
 	}
@@ -158,6 +158,7 @@ public class ControllerClass {
 	}
 	
 	public boolean addEvent(HourEvent newEvent) {
+		//This part of the code will resolve foreign key actions
 		//Event simpleEvent = new Event(newEvent.getId(), newEvent.getDateEvent(),newEvent.getNameEvent());
 		//this.events.add(simpleEvent);
 		this.hourEvents.add(newEvent);
@@ -172,6 +173,7 @@ public class ControllerClass {
 	}
 	
 	public boolean addEvent(DurationEvent newEvent) {
+		//This part of the code will resolve foreign key actions
 		//Event simpleEvent = new Event(newEvent.getId(), newEvent.getDateEvent(),newEvent.getNameEvent());
 		//this.events.add(simpleEvent);
 		this.durationEvents.add(newEvent);
@@ -212,7 +214,8 @@ public class ControllerClass {
 			System.out.println("Event not found!");
 			return false;
 		}
-		
+
+		//This part of the code will resolve foreign key actions
 		//int indexSimple = this.events.indexOf(editSimpleEvent);
 		//Event updateSimpleEvent = new Event(editEvent.getId(), updateEvent.getDateEvent(),updateEvent.getNameEvent());
 		//this.events.set(indexSimple, updateSimpleEvent);
@@ -235,7 +238,8 @@ public class ControllerClass {
 			System.out.println("Event not found!");
 			return false;
 		}
-		
+
+		//This part of the code will resolve foreign key actions
 		//int indexSimple = this.events.indexOf(editSimpleEvent);
 		//Event updateSimpleEvent = new Event(editEvent.getId(), updateEvent.getDateEvent(),updateEvent.getNameEvent());
 		//this.events.set(indexSimple, updateSimpleEvent);
@@ -250,4 +254,32 @@ public class ControllerClass {
 			
 		return false;
 	}
+	
+	public Event findSimpleEvent(int id) {
+		for(Event event : this.events) {
+			if(event.getId()==id) {
+				return event;
+			}
+		}
+		return null;
+	}
+	
+	public HourEvent findHourEvent(int id) {
+		for(HourEvent event : this.hourEvents) {
+			if(event.getId() == id) {
+				return event;
+			}
+		}
+		return null;
+	}
+	
+	public DurationEvent findDurationEvent(int id) {
+		for(DurationEvent event : this.durationEvents) {
+			if(event.getId()==id) {
+				return event;
+			}
+		}
+		return null;
+	}
+	
 }
