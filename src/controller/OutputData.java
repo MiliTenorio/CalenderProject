@@ -42,11 +42,29 @@ public class OutputData {
 		System.out.println("The final time of event: " + event.getFinalTime());
 	}
 	
+	//Simple informations
 	public static void showAllEvents(ControllerClass controller) {
 		System.out.println("All Events:");
 		
 		for(Event eventList : controller.getAllEvents()) {
 			showSimpleEvent(eventList);
+		}
+	}
+	
+	//All informations
+	public static void showAllInfoEvents(ControllerClass controller) {
+		System.out.println("All Events:");
+		
+		for(Event eventList : controller.getEvents()) {
+			showSimpleEvent(eventList);
+		}
+		
+		for(HourEvent eventList : controller.getHourEvents()) {
+			showHourEvent(eventList);
+		}
+		
+		for(DurationEvent eventList : controller.getDurationEvents()) {
+			showDurationEvent(eventList);
 		}
 	}
 	
@@ -76,7 +94,8 @@ public class OutputData {
 	
 	public static void showEvents(ControllerClass controller, int type) {
 		if(type == 0) {
-			showAllEvents(controller);
+			//showAllEvents(controller);
+			showAllInfoEvents(controller);
 		}
 
 		switch (type) {

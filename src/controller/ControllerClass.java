@@ -207,10 +207,9 @@ public class ControllerClass {
 	}
 	
 	public boolean editEvent(HourEvent editEvent, HourEvent updateEvent) {
+		//Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
 		
-		Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
-		
-		if(!this.events.contains(editSimpleEvent) && !this.hourEvents.contains(editEvent)) {
+		if(/*!this.events.contains(editSimpleEvent) &&*/ !this.hourEvents.contains(editEvent)) {
 			System.out.println("Event not found!");
 			return false;
 		}
@@ -223,7 +222,7 @@ public class ControllerClass {
 		int index = this.hourEvents.indexOf(editEvent);
 		this.hourEvents.set(index, updateEvent);
 		
-		if(this.events.contains(updateEvent) && this.hourEvents.contains(updateEvent)) {
+		if(/*this.events.contains(updateEvent) &&*/ this.hourEvents.contains(updateEvent)) {
 			System.out.println("Updated event!");
 			return true;
 		}
@@ -232,9 +231,9 @@ public class ControllerClass {
 	}
 	
 	public boolean editEvent(DurationEvent editEvent, DurationEvent updateEvent) {
-		Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
+		//Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
 		
-		if(!this.events.contains(editSimpleEvent) && !this.durationEvents.contains(editEvent)) {
+		if(/*!this.events.contains(editSimpleEvent) &&*/ !this.durationEvents.contains(editEvent)) {
 			System.out.println("Event not found!");
 			return false;
 		}
@@ -247,7 +246,7 @@ public class ControllerClass {
 		int index = this.durationEvents.indexOf(editEvent);
 		this.durationEvents.set(index, updateEvent);
 		
-		if(this.events.contains(updateEvent) && this.durationEvents.contains(updateEvent)) {
+		if(/*this.events.contains(updateEvent) &&*/ this.durationEvents.contains(updateEvent)) {
 			System.out.println("Updated event!");
 			return true;
 		}
@@ -280,6 +279,30 @@ public class ControllerClass {
 			}
 		}
 		return null;
+	}
+
+	public boolean deleteSimpleEvent(int id, Event event) {
+		events.remove(id);
+		if(events.contains(event)) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean deleteHourEvent(int id, HourEvent event) {
+		hourEvents.remove(id);
+		if(hourEvents.contains(event)) {
+			return false;
+		}
+		return true;		
+	}
+
+	public boolean deleteDurationEvent(int id, DurationEvent event) {
+		durationEvents.remove(id);
+		if(durationEvents.contains(event)) {
+			return false;
+		}
+		return true;
 	}
 	
 }

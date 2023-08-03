@@ -96,7 +96,8 @@ public class InputData {
 
 	public static void editingHourEvent(Scanner scanner, ControllerClass controller) {
     	int id = inputId(scanner);
-    	Event originalEvent = controller.findSimpleEvent(id);
+    	//Event originalEvent = controller.findSimpleEvent(id); > Will be change to find foreign key in SQL
+    	HourEvent originalEvent = controller.findHourEvent(id);
     	
     	Date date = inputDate(scanner);
     	String name = inputName(scanner);
@@ -110,7 +111,8 @@ public class InputData {
 	
 	public static void editingDurationEvent(Scanner scanner, ControllerClass controller) {
     	int id = inputId(scanner);
-    	Event originalEvent = controller.findSimpleEvent(id);
+    	//Event originalEvent = controller.findSimpleEvent(id); > Will be change to find foreign key in SQL
+    	DurationEvent originalEvent = controller.findDurationEvent(id);
     	
     	Date date = inputDate(scanner);
     	String name = inputName(scanner);
@@ -121,5 +123,87 @@ public class InputData {
     	
     	controller.editEvent(originalEvent, editedEvent);
 		
+	}
+
+	public static void deleteSimpleEvent(Scanner scanner, ControllerClass controller) {
+    	int idEvent = inputId(scanner);    
+		Event event = controller.findSimpleEvent(idEvent);
+		
+		if(event == null) {
+			System.out.println("Event not found!");
+			return;
+		}
+		
+		System.out.println("Are you sure you want to delete this event? Y/N");
+		OutputData.showSimpleEvent(event);
+		String delete = scanner.next();
+		
+		if(delete.equals("Y") || delete.equals("y")) {
+			int idList = controller.events.indexOf(event);
+			
+	    	if(controller.deleteSimpleEvent(idList,event)) {
+				System.out.println("Deleted!");
+	    	}else {
+				System.out.println("Not deleted");
+	    	}
+		}
+		else {
+			System.out.println("Request canceled");
+		}
+	}
+
+	public static void deleteHourEvent(Scanner scanner, ControllerClass controller) {
+    	int idEvent = inputId(scanner);    
+		HourEvent event = controller.findHourEvent(idEvent);
+		
+		if(event == null) {
+			System.out.println("Event not found!");
+			return;
+		}
+		
+		System.out.println("Are you sure you want to delete this event? Y/N");
+		OutputData.showSimpleEvent(event);
+		
+		String delete = scanner.nextLine();
+		
+		if(delete.equals("Y")|| delete.equals("y")) {
+			int idList = controller.hourEvents.indexOf(event);
+			
+	    	if(controller.deleteHourEvent(idList,event)) {
+				System.out.println("Deleted!");
+	    	}else {
+				System.out.println("Not deleted");
+	    	}
+		}
+		else {
+			System.out.println("Request canceled");
+		}	
+	}
+
+	public static void deleteDurationEvent(Scanner scanner, ControllerClass controller) {
+    	int idEvent = inputId(scanner);    
+		DurationEvent event = controller.findDurationEvent(idEvent);
+		
+		if(event == null) {
+			System.out.println("Event not found!");
+			return;
+		}
+		
+		System.out.println("Are you sure you want to delete this event? Y/N");
+		OutputData.showSimpleEvent(event);
+		String delete = scanner.nextLine();
+		
+		if(delete.equals("Y") || delete.equals("y")) {
+			int idList = controller.durationEvents.indexOf(event);
+			
+	    	if(controller.deleteDurationEvent(idList,event)) {
+				System.out.println("Deleted!");
+	    	}else {
+				System.out.println("Not deleted");
+	    	}
+		}
+		else {
+			System.out.println("Request canceled");
+		}	
 	}
 }

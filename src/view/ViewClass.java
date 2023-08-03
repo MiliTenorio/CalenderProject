@@ -28,7 +28,8 @@ public class ViewClass {
 		  	System.out.print("| 1 - Add Event               |\n");
 		  	System.out.print("| 2 - See Events              |\n");
 		  	System.out.print("| 3 - Edit Event              |\n");
-		  	System.out.print("| 4 - Back to Menu            |\n");
+		  	System.out.print("| 4 - Delete Event            |\n");
+		  	System.out.print("| 5 - Back to Menu            |\n");
 		  	System.out.print("| 0 - Exit                    |\n");
 		  	System.out.print("|-----------------------------|\n");
 		  	
@@ -51,8 +52,12 @@ public class ViewClass {
 			  		editEvent(scan);
 			  		break;
 			  		
+			  	case 4:
+			  		deleteEvent(scan);
+			  		break;
+			  		
 			  	default:
-			  		option = 4;
+			  		option = 5;
 			  		break;
 			  }
 		} while(option != 0);
@@ -60,7 +65,6 @@ public class ViewClass {
   		System.out.println("Thanks for coming!");
 	}
 	
-
 	private static void addEvent(Scanner scan) {
 		System.out.println("Let's add a new event:");
 		
@@ -143,8 +147,7 @@ public class ViewClass {
 		
 	}
 	
-	private static void editEvent(Scanner scan) {//falta implementar a validação se o evento existe
-		// TODO Auto-generated method stub
+	private static void editEvent(Scanner scan) {
 		System.out.println("Let's edit some information about your events");
 		System.out.println("What's is the type of the Event?");
 	  	System.out.print("|---------------------------------------|\n");
@@ -172,6 +175,35 @@ public class ViewClass {
 		  		break;
 		  }
 		
+	}
+	
+	private static void deleteEvent(Scanner scan2) {
+		System.out.println("Let's delete a event");
+		System.out.println("What's is the type of the Event?");
+	  	System.out.print("|---------------------------------------|\n");
+	  	System.out.print("| 1 - Simple event                      |\n");
+	  	System.out.print("| 2 - Event with initial time           |\n");
+	  	System.out.print("| 3 - Event with inital and final time  |\n");
+	  	System.out.print("| 0 - Return to menu                    |\n");
+	  	System.out.print("|---------------------------------------|\n");
+	  	
+		int option = controller.InputData.menuTypeShowEvent(scan);
+	  	
+	  	switch (option) {
+	  		case 0:
+	  			break;
+		  	case 1:
+		  		InputData.deleteSimpleEvent(scan, theController);
+		  		break;
+		  		
+		  	case 2:
+		  		InputData.deleteHourEvent(scan, theController);
+		  		break;
+		  		
+		  	case 3:
+		  		InputData.deleteDurationEvent(scan, theController);
+		  		break;
+		  }
 	}
 
 }
