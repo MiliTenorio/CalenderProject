@@ -1,0 +1,35 @@
+Project Name: Calendar Application (Java & MySQL)
+Language: Java
+Database: MySQL (Work in Progress)
+Architecture: MVC (Model-View-Controller)
+
+Description:
+This project demonstrates my Java programming skills and SQL knowledge, particularly in using MySQL for data management. The Calendar Application is designed to provide basic CRUD (Create, Read, Update, Delete) functionalities for events. Currently, the application utilizes a linked list as a temporary database, but my ongoing work includes integrating MySQL to enhance data handling and storage capabilities.
+
+Key Features:
+- Create new events and schedule them in the calendar.
+- Read and display existing events for selected option.
+- Update event details, such as title, date, time.
+- Delete events from the calendar.
+
+Project Highlights:
+- Implemented the MVC architecture to maintain code organization and separation of concerns.
+- Demonstrated proficiency in Java programming for building the application's backend logic.
+- Showcased SQL skills by handling data storage and retrieval in a temporary linked list database.
+- Ongoing progress in integrating MySQL as a more robust database solution.
+
+Future Enhancements:
+As an ongoing effort, I plan to further enhance the application with the following improvements:
+- Complete the integration with MySQL for improved data management and persistence.
+- Develop a graphical user interface (GUI) to offer a more user-friendly experience.
+- Expand functionality to support recurring events, reminders, and event categorization.
+
+How to Run:
+To run the application, clone the repository and compile the Java files. Ensure you have MySQL installed and set up the required database tables. Please follow the code comments for necessary configurations. To interact with the application, run the main Java file and manage calendar events using the console interface.
+
+GitHub Repository Link: https://github.com/MiliTenorio/CalenderProject
+
+Feedback and Contributions:
+Feedback and contributions are highly appreciated. Feel free to submit pull requests or open issues on the GitHub repository to support the project's development and improvement.
+
+Note: This project is intended for showcasing my skills and learning progress. It is still a work in progress, and I welcome any feedback to enhance its functionalities and code quality.
