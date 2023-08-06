@@ -13,6 +13,12 @@ public class Event {
 		this.nameEvent = name;
 	}
 	
+	public Event(int id, String date, String name) {
+		this.id = id;
+		this.dateEvent = controller.ParseData.convertStringToDate(date);
+		this.nameEvent = name;
+	}
+	
 	public int getId() {
 		return id;
 	}

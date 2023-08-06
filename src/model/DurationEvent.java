@@ -12,6 +12,12 @@ public class DurationEvent extends Event{
 		this.initialTime = initialTime;
 		this.finalTime = finalTime;
 	}
+	
+	public DurationEvent(int idEvent, String date, String name, String initialTime, String finalTime) {
+		super(idEvent, date, name);
+		this.initialTime = initialTime;
+		this.finalTime = finalTime;
+	}
 
 	public String getInitialTime() {
 		return initialTime;

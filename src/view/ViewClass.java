@@ -1,4 +1,7 @@
 package view;
+import java.sql.Connection;
+import java.sql.SQLException;
+//import java.util.List;
 import java.util.Scanner;
 
 import controller.ControllerClass;
@@ -6,17 +9,51 @@ import controller.InputData;
 import model.DurationEvent;
 import model.Event;
 import model.HourEvent;
+import model.MySQLDatabase;
 
 public class ViewClass {
 	
 	static ControllerClass theController;
-	//private static Scanner scanner;
 	private static Scanner scan;
 	
 	public static void main(String[] args) {
 		
-		theController = new ControllerClass();
+		MySQLDatabase mySQLDatabase = new MySQLDatabase();
+        mySQLDatabase.createDatabase(); // Create the database if it doesn't exist
 
+        try (Connection connection = mySQLDatabase.getConnection()) {
+            // Your CRUD operations and other database operations go here...
+        	// Create records in table1, table2, and table3
+        	mySQLDatabase.createTables();
+
+            // Read records from table1
+            /*List<String> records = mySQLDatabase.readTable1();
+            for (String record : records) {
+                System.out.println(record);
+            }
+
+            // Update a record in table1
+            mySQLDatabase.updateTable1(1, "2023-07-11", "Event B");
+
+            // Read records from table1
+            records = mySQLDatabase.readTable1();
+            for (String record : records) {
+                System.out.println(record);
+            }*/
+            
+            // Delete a record from table1
+            //mySQLDatabase.deleteTable1(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		//model.MySQLDatabase mySQLDatabase = new MySQLDatabase();
+
+		
+		//////
+		
+		theController = new ControllerClass();
 
 	  	int option = 0;
 	  	
