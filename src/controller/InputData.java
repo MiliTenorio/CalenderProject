@@ -206,4 +206,102 @@ public class InputData {
 			System.out.println("Request canceled");
 		}	
 	}
+	
+	public static boolean inputEventInformation(Scanner scan, ControllerClass controller) {
+		System.out.println("Let's add a new event:");
+		
+		Event newEvent = inputSimpleEventInformation(scan);
+		
+		System.out.println("Are you need add more information about the event?");
+	  	System.out.print("|--------------------------------|\n");
+	  	System.out.print("| 1 - I don't need               |\n");
+	  	System.out.print("| 2 - Add Initial Time           |\n");
+	  	System.out.print("| 3 - Add Initial and Final Time |\n");
+	  	System.out.print("|--------------------------------|\n");
+		
+		int option = InputData.menuTypeEvent(scan);
+	  	
+	  	switch (option) {
+		  	case 1:
+		  		if(controller.addEvent(newEvent) == true) {
+			  		return true;
+				}
+		  		
+		  	case 2:
+		  		HourEvent newHourEvent = inputHourEventInformation(scan, newEvent);
+		  		if(controller.addEvent(newHourEvent) == true) {
+			  		return true;
+				}
+		  		
+		  	case 3:
+		  		DurationEvent newDurationEvent = inputDurationEventInformation(scan, newEvent);
+		  		if(controller.addEvent(newDurationEvent) == true) {
+			  		return true;
+				}
+		  		
+				System.out.println("Some problem happens :( ");
+				inputEventInformation(scan,controller);
+		  }
+	  	return false;
+	}
+	
+	public static Event inputSimpleEventInformation(Scanner scan) {
+		
+		Event simpleEvent = new Event(InputData.inputDate(scan), InputData.inputName(scan));
+		
+		return simpleEvent;
+	}
+	
+	public static HourEvent inputHourEventInformation(Scanner scan, Event simpleEvent) {
+		HourEvent hourEvent = new HourEvent(simpleEvent.getDateEvent(),simpleEvent.getNameEvent(),inputHour(scan));
+		
+		return hourEvent;
+	}
+	
+	public static DurationEvent inputDurationEventInformation(Scanner scan, Event simpleEvent) {
+		DurationEvent durationEvent = new DurationEvent(simpleEvent.getDateEvent(),simpleEvent.getNameEvent(),inputHour(scan), inputHour(scan));
+		
+		return durationEvent;
+	}
+
+	public static void readInformations(Scanner scan, ControllerClass theController) {
+		System.out.println("Let's looking for some informations about your event");
+	  	System.out.print("|--------------------------------------------|\n");
+	  	System.out.print("| 1 - Only one event                         |\n");
+	  	System.out.print("| 2 - All events                             |\n");
+	  	System.out.print("| 3 - All simple events                      |\n");
+	  	System.out.print("| 4 - All events with initial time           |\n");
+	  	System.out.print("| 5 - All events with inital and final time  |\n");
+	  	System.out.print("| 0 - Return to menu                         |\n");
+	  	System.out.print("|--------------------------------------------|\n");
+		
+		int option = menuTypeShowEvent(scan);
+	  	
+	  	switch (option) {
+	  		case 0:
+	  			break;
+		  	case 1:
+		  		int id = InputData.inputId(scan);
+		  		OutputData.showSimpleEvent(theController.findSimpleEvent(id));
+		  		break;
+		  		
+		  	case 2:
+		  		OutputData.showEvents(theController, 0);
+		  		break;
+		  		
+		  	case 3:
+		  		OutputData.showEvents(theController, 1);
+		  		break;
+		  		
+		  	case 4:
+		  		OutputData.showEvents(theController, 2);
+		  		break;
+		  		
+		  	case 5:
+		  		OutputData.showEvents(theController, 3);
+		  		break;
+		  }
+		
+	}
+	
 }

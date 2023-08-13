@@ -1,8 +1,10 @@
 package controller;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 //import java.sql.Time;
 import java.util.LinkedList;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import model.DurationEvent;
 
@@ -13,49 +15,9 @@ import model.Event;
 import model.HourEvent;
 //import model.DataBase;
 //import model.DataBaseConnection;
+import model.MySQLDatabase;
 
-public class ControllerClass {
-
-	//private static DataBaseConnection dBConnection;
-	//private static Event newEvent;
-	
-	/*public static void createDB() {
-		// TODO Auto-generated method stub
-		System.out.println("> Controller <");
-		
-		try (java.sql.Connection con = DataBaseConnection.getDataBaseConnection()) {
-			System.out.println("> Conectou <");*/
-			/*DataBase.createTables(con, "events");
-			DataBase.createTables(con, "events_hour");
-			DataBase.createTables(con, "events_duration");*/
-			
-		/*} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("> nao rolou <");
-		}
-		
-	}*/
-	
-	/*public static boolean addEvent(Event newEvent) {
-		boolean add;
-		try (java.sql.Connection con = DataBaseConnection.getDataBaseConnection()) {
-						
-			add = DataBase.addEvent(con, newEvent);
-			
-			if(add == true) {
-				return true;
-			}else {
-				return false;
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-	}*/
-	
+public class ControllerClass {	
 	//Until I don't finish my DB in MySQL, I'll use:
 	// >> LinkedList to be the Tables
 	LinkedList <Event>  events;
@@ -64,130 +26,89 @@ public class ControllerClass {
 	// >> To be used as automatic iterator similar in SQL, this is important because of the foreign key
 	int id;
 	
-	//Return all the simple informations about all the data
-	//This is not will occurs in MySQL because of use foreign key
-	public LinkedList<Event> getAllEvents(){
-		LinkedList<Event> allEvents = new LinkedList<Event>();
-		
-		allEvents = events;
-		
-		for(HourEvent event : hourEvents) {
-			allEvents.add(event.getSimpleEvent());
-		}
-		
-		for(DurationEvent event : durationEvents) {
-			allEvents.add(event.getSimpleEvent());
-		}
-		
-		return allEvents;
+	static MySQLDatabase mySQLDatabase;
+	
+	public ControllerClass() {	
+		mySQLDatabase = new MySQLDatabase();
+        mySQLDatabase.createDatabase(); // Create the database if it doesn't exist
 	}
 	
-	public LinkedList<Event> getEvents() {
-		return events;
-	}
-
-	public void setEvents(LinkedList<Event> events) {
-		this.events = events;
-	}
-
-	public LinkedList<HourEvent> getHourEvents() {
-		return hourEvents;
-	}
-
-	public void setHourEvents(LinkedList<HourEvent> hourEvents) {
-		this.hourEvents = hourEvents;
-	}
-
-	public LinkedList<DurationEvent> getDurationEvents() {
-		return durationEvents;
-	}
-
-	public void setDurationEvents(LinkedList<DurationEvent> durationEvents) {
-		this.durationEvents = durationEvents;
-	}
-
-	//Database using LinkedList
-	public ControllerClass() {
-		this.events = new LinkedList<Event>();
-		this.hourEvents = new LinkedList<HourEvent>();
-		this.durationEvents = new LinkedList<DurationEvent>();
-		
-		//Because problems to use Scanner, here add some examples of events:
-		events.add(new Event(0,ParseData.convertStringToDate("2023-02-01"),"Event 1"));
-		events.add(new Event(1,ParseData.convertStringToDate("2023-04-22"),"Event 2"));
-		hourEvents.add(new HourEvent(2,ParseData.convertStringToDate("2023-02-01"),"Event 3","9:10"));
-		hourEvents.add(new HourEvent(3,ParseData.convertStringToDate("2023-07-13"),"Event 4","15:30"));
-		durationEvents.add(new DurationEvent(4,ParseData.convertStringToDate("2023-10-01"),"Event 5","19:00","20:00"));
-		durationEvents.add(new DurationEvent(5,ParseData.convertStringToDate("2023-09-12"),"Event 6","18:30","19:45"));
-		
-		id = 6;
-	}
+	//Read Event
 	
-	//Input informations to do actions
-	public Event inputSimpleEventInformation(Scanner scan) {
-		this.id++;
-		Event simpleEvent = new Event(this.id,InputData.inputDate(scan), InputData.inputName(scan));
-		
-		return simpleEvent;
+	public LinkedList<Event> getAllSimpleEvent() {
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readAllSimpleEvent(mySQLDatabase);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return null;	
 	}
-	
-	public HourEvent inputHourEventInformation(Scanner scan, Event simpleEvent) {
-		this.id++;
-		HourEvent hourEvent = new HourEvent(simpleEvent.getId(),simpleEvent.getDateEvent(),simpleEvent.getNameEvent(),InputData.inputHour(scan));
-		
-		return hourEvent;
-	}
-	
-	public DurationEvent inputDurationEventInformation(Scanner scan, Event simpleEvent) {
-		this.id++;
-		DurationEvent durationEvent = new DurationEvent(simpleEvent.getId(),simpleEvent.getDateEvent(),simpleEvent.getNameEvent(),InputData.inputHour(scan), InputData.inputHour(scan));
-		
-		return durationEvent;
+
+	public LinkedList<HourEvent> getAllHourEvent() {
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readAllHourEvent(mySQLDatabase);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return null;		}
+
+	public LinkedList<DurationEvent> getAllDurationEvent() {
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readAllDurationEvent(mySQLDatabase);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return null;	
 	}
 	
 	//Add Event
-	public boolean addEvent(Event newEvent) {
-		this.events.add(newEvent);
-		if(events.contains(newEvent)) {
-			System.out.println("Event add!");
-			return true;
-		}
-		
-		System.out.println("Event not add");
+	public boolean addEvent(Event newEvent) {		
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	if(DataBase.addEvent(mySQLDatabase, newEvent)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return false;
 	}
 	
-	public boolean addEvent(HourEvent newEvent) {
-		//This part of the code will resolve foreign key actions
-		//Event simpleEvent = new Event(newEvent.getId(), newEvent.getDateEvent(),newEvent.getNameEvent());
-		//this.events.add(simpleEvent);
-		this.hourEvents.add(newEvent);
-		
-		if(/*events.contains(simpleEvent) &&*/ this.hourEvents.contains(newEvent)) {
-			System.out.println("Event add!");
-			return true;
-		}
-		
-		System.out.println("Event not add");
+	public boolean addEvent(HourEvent newEvent) {		
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	if(DataBase.addEvent(mySQLDatabase, newEvent)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return false;
 	}
 	
-	public boolean addEvent(DurationEvent newEvent) {
-		//This part of the code will resolve foreign key actions
-		//Event simpleEvent = new Event(newEvent.getId(), newEvent.getDateEvent(),newEvent.getNameEvent());
-		//this.events.add(simpleEvent);
-		this.durationEvents.add(newEvent);
-		
-		if(/*events.contains(simpleEvent) && */this.durationEvents.contains(newEvent)) {
-			System.out.println("Event add!");
-			return true;
-		}
-		
-		System.out.println("Event not add");
+	public boolean addEvent(DurationEvent newEvent) {		
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	if(DataBase.addEvent(mySQLDatabase, newEvent)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return false;
 	}
 	
-	//Edit Event
+	/*
+	 * Still will be implemented
+	 */
+	
+	//Edit Event 
 	public boolean editEvent(Event editEvent, Event updateEvent) {
 		if(!this.events.contains(editEvent)) {
 			System.out.println("Event not found!");

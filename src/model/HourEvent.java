@@ -16,6 +16,18 @@ public class HourEvent extends Event {
 		// TODO Auto-generated constructor stub
 		this.time = time;
 	}
+	
+	public HourEvent(Date date, String name, String time) {
+		super(date, name);
+		// TODO Auto-generated constructor stub
+		this.time = time;
+	}
+	
+	public HourEvent(String date, String name, String time) {
+		super(date, name);
+		// TODO Auto-generated constructor stub
+		this.time = time;
+	}
 
 	public String getTime() {
 		return time;

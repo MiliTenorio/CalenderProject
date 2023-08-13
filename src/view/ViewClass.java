@@ -1,15 +1,15 @@
 package view;
-import java.sql.Connection;
-import java.sql.SQLException;
+//import java.sql.Connection;
+//import java.sql.SQLException;
 //import java.util.List;
 import java.util.Scanner;
 
 import controller.ControllerClass;
 import controller.InputData;
-import model.DurationEvent;
+/*import model.DurationEvent;
 import model.Event;
 import model.HourEvent;
-import model.MySQLDatabase;
+import model.MySQLDatabase;*/
 
 public class ViewClass {
 	
@@ -18,40 +18,15 @@ public class ViewClass {
 	
 	public static void main(String[] args) {
 		
-		MySQLDatabase mySQLDatabase = new MySQLDatabase();
+		/*MySQLDatabase mySQLDatabase = new MySQLDatabase();
         mySQLDatabase.createDatabase(); // Create the database if it doesn't exist
 
+    	// Create SimpleEventTable, HourEventTable, and DurationEventTable
         try (Connection connection = mySQLDatabase.getConnection()) {
-            // Your CRUD operations and other database operations go here...
-        	// Create records in table1, table2, and table3
         	mySQLDatabase.createTables();
-
-            // Read records from table1
-            /*List<String> records = mySQLDatabase.readTable1();
-            for (String record : records) {
-                System.out.println(record);
-            }
-
-            // Update a record in table1
-            mySQLDatabase.updateTable1(1, "2023-07-11", "Event B");
-
-            // Read records from table1
-            records = mySQLDatabase.readTable1();
-            for (String record : records) {
-                System.out.println(record);
-            }*/
-            
-            // Delete a record from table1
-            //mySQLDatabase.deleteTable1(1);
-
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-		
-		//model.MySQLDatabase mySQLDatabase = new MySQLDatabase();
-
-		
-		//////
+        }*/
 		
 		theController = new ControllerClass();
 
@@ -102,50 +77,15 @@ public class ViewClass {
   		System.out.println("Thanks for coming!");
 	}
 	
-	private static void addEvent(Scanner scan) {
-		System.out.println("Let's add a new event:");
-		
-		Event newEvent = theController.inputSimpleEventInformation(scan);
-		
-		System.out.println("Are you need add more information about the event?");
-	  	System.out.print("|--------------------------------|\n");
-	  	System.out.print("| 1 - I don't need               |\n");
-	  	System.out.print("| 2 - Add Initial Time           |\n");
-	  	System.out.print("| 3 - Add Initial and Final Time |\n");
-	  	System.out.print("|--------------------------------|\n");
-		
-		int option = controller.InputData.menuTypeEvent(scan);
-	  	
-	  	switch (option) {
-		  	case 1:
-		  		if(theController.addEvent(newEvent) == false) {
-					System.out.println("Some problem happens :( ");
-					addEvent(scan);
-				}
-		  		break;
-		  		
-		  	case 2:
-		  		HourEvent newHourEvent = theController.inputHourEventInformation(scan, newEvent);
-		  		if(theController.addEvent(newHourEvent) == false) {
-					System.out.println("Some problem happens :( ");
-					addEvent(scan);
-				}
-		  		break;
-		  		
-		  	case 3:
-		  		DurationEvent newDurationEvent = theController.inputDurationEventInformation(scan, newEvent);
-		  		if(theController.addEvent(newDurationEvent) == false) {
-					System.out.println("Some problem happens :( ");
-					addEvent(scan);
-				}
-		  		break;
-		  }
-		
+	private static void addEvent(Scanner scan) {		
+		if(InputData.inputEventInformation(scan, theController)) {
+			System.out.print("|--- Event Add ---|\n");
+		}
 	}
 
 	private static void seeEvents(Scanner scan) {
 		// TODO Auto-generated method stub
-		System.out.println("Let's looking for some informations about your event");
+		/*System.out.println("Let's looking for some informations about your event");
 	  	System.out.print("|--------------------------------------------|\n");
 	  	System.out.print("| 1 - Only one event                         |\n");
 	  	System.out.print("| 2 - All events                             |\n");
@@ -180,8 +120,8 @@ public class ViewClass {
 		  	case 5:
 		  		controller.OutputData.showEvents(theController, 3);
 		  		break;
-		  }
-		
+		  }*/
+	  	controller.InputData.readInformations(scan, theController);
 	}
 	
 	private static void editEvent(Scanner scan) {

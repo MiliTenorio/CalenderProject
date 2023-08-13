@@ -152,6 +152,11 @@ public class MySQLDatabase {
     //CRUD Hour Event
     public boolean createHourEvent(HourEvent event) throws SQLException {
     	boolean simpleEvent = createSimpleEvent(event);
+    	
+    	if(simpleEvent == false) {
+    		return false;
+    	}
+    	
     	int foreignId = findIdSimpleEvent(ParseData.convertDateToString(event.getDateEvent()),event.getNameEvent());
         String insertSQL = "INSERT INTO hourEventTable (foreign_id, time) VALUES (?, ?)";
         try (Connection connection = getConnection();
@@ -171,52 +176,36 @@ public class MySQLDatabase {
     
     public LinkedList<HourEvent> readAllHourEventTable() throws SQLException {
     	LinkedList<HourEvent> result = new LinkedList<HourEvent>();
-        String selectSQL = "SELECT * FROM hourEventTable";
+        String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.time FROM houreventtable t2 INNER JOIN "
+        		+ "simpleeventtable t1 ON t2.foreign_id = t1.id;";
+       
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                int idEvent = resultSet.getInt("foreign_id");
-                String time = resultSet.getString("time");
-                String name = null;
-                String date = null;  
-                
-                String selectSQLEvent = "SELECT * FROM simpleEventTable WHERE id=" + idEvent;
-                try (PreparedStatement preparedStatementEvent = connection.prepareStatement(selectSQLEvent)) {
-                	ResultSet resultSetEvent = preparedStatement.executeQuery();
-                    while (resultSetEvent.next()) {
-                    	name = resultSetEvent.getString("name"); 
-                    	date = resultSetEvent.getString("date"); 
-                    }
-				}
-                result.add(new HourEvent(idEvent,date,name,time));
-            }
-         }
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+               while (resultSet.next()) {
+            	             	   
+            	   result.add(new HourEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            			   resultSet.getString("name"), resultSet.getString("time")));
+               }
+        }
+        
         return result;
     }
     
     public HourEvent readHourEventTable(int id) throws SQLException {
-        String selectSQL = "SELECT * FROM hourEventTable WHERE id =" + id;
+        String selectSQL = "SELECT t1.name, t1.date, t2.time FROM houreventtable t2 INNER JOIN "
+        		+ "simpleeventtable t1 ON t2.foreign_id = t1.id  WHERE t2.foreign_id = " + id ;
+       
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                int idEvent = resultSet.getInt("foreign_id");
-                String time = resultSet.getString("time");
-                String name = null;
-                String date = null;  
-                
-                String selectSQLEvent = "SELECT * FROM simpleEventTable WHERE id=" + idEvent;
-                try (PreparedStatement preparedStatementEvent = connection.prepareStatement(selectSQLEvent)) {
-                	ResultSet resultSetEvent = preparedStatement.executeQuery();
-                    while (resultSetEvent.next()) {
-                    	name = resultSetEvent.getString("name"); 
-                    	date = resultSetEvent.getString("date"); 
-                    }
-				}
-                return (new HourEvent(idEvent,date,name,time));
-            }
-         }
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+               while (resultSet.next()) {
+            	             	   
+            	   return new HourEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            			   resultSet.getString("name"), resultSet.getString("time"));
+               }
+        }
+        
         return null;
     }
 
@@ -250,10 +239,16 @@ public class MySQLDatabase {
     //CRUD Duration Event
     public boolean createDurationEvent(DurationEvent event) throws SQLException {
     	boolean simpleEvent = createSimpleEvent(event);
+    	
+    	if(simpleEvent == false) {
+    		return false;
+    	}
+    	
     	int foreignId = findIdSimpleEvent(ParseData.convertDateToString(event.getDateEvent()),event.getNameEvent());    	
-        String insertSQL = "INSERT INTO durationEventTable (foreign_id, initialTime, finalTime) VALUES (?, ?, ?)";
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+    	String insertSQL = "INSERT INTO durationEventTable (foreign_id, initialTime, finalTime) VALUES (?, ?, ?)";
+        
+    	try (Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
             preparedStatement.setInt(1, foreignId);
             preparedStatement.setString(2, event.initialTime);
             preparedStatement.setString(3, event.finalTime);
@@ -269,34 +264,44 @@ public class MySQLDatabase {
     }
     
     public LinkedList<DurationEvent> readAllDurationEventTable() throws SQLException {
-    	LinkedList<DurationEvent> result = new LinkedList<DurationEvent>();
-        String selectSQL = "SELECT * FROM durationEventTable";
+    	LinkedList<DurationEvent> result = new LinkedList<DurationEvent>();    	
+    	String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.initialTime, t2.finalTime FROM "
+    			+ "durationEventTable t2 INNER JOIN simpleEventTable t1 ON t2.foreign_id = t1.id;";
+        
         try (Connection connection = getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
                while (resultSet.next()) {
-                   int idEvent = resultSet.getInt("foreign_id");
-                   String inicialTime = resultSet.getString("inicialTime");
-                   String finalTime = resultSet.getString("finalTime");
-                   String name = null;
-                   String date = null;  
-                   
-                   String selectSQLEvent = "SELECT * FROM simpleEventTable WHERE id=" + idEvent;
-                   try (PreparedStatement preparedStatementEvent = connection.prepareStatement(selectSQLEvent)) {
-                   	ResultSet resultSetEvent = preparedStatement.executeQuery();
-                       while (resultSetEvent.next()) {
-                       	name = resultSetEvent.getString("name"); 
-                       	date = resultSetEvent.getString("date"); 
-                       }
-   				}
-                   result.add(new DurationEvent(idEvent,date,name,inicialTime, finalTime));
+            	             	   
+            	   result.add(new DurationEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            			   resultSet.getString("name"), resultSet.getString("initialTime"), resultSet.getString("finalTime")));
                }
-            }
+        }
            return result;
     }
+    
+
+	public DurationEvent readDurationEventTable(int id) {
+		String selectSQL = "SELECT t1.name, t1.date, t2.initialTime, t2.finalTime FROM durationeventtable t2 INNER JOIN "
+        		+ "simpleeventtable t1 ON t2.foreign_id = t1.id  WHERE t2.foreign_id = " + id ;
+        try (Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+               while (resultSet.next()) {
+            	             	   
+            	   return new DurationEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            			   resultSet.getString("name"), resultSet.getString("initialTime"), resultSet.getString("finalTime"));
+               }
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return null;
+	}
 
     public boolean updateDurationEvent(DurationEvent event, int foreignId) throws SQLException {      
-        String updateSQL = "UPDATE duratationEventTable SET incialTime = ?, finalTime = ? WHERE id = ?";
+        String updateSQL = "UPDATE durationEventTable SET incialTime = ?, finalTime = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, event.getInitialTime());
@@ -325,13 +330,22 @@ public class MySQLDatabase {
     
     //Other important methods
     public int findIdSimpleEvent(String date, String name) throws SQLException {
-        String selectSQL = "SELECT id FROM simpleEventTable WHERE  date = ?, name = ?";
+        int id = -1; // Default value if no match is found
+        String selectSQL = "SELECT id FROM simpleEventTable WHERE name = ? AND date = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
-            preparedStatement.setString(1, date);
-            preparedStatement.setString(2, name);
-            return preparedStatement.executeUpdate();
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, date);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    id = resultSet.getInt("id");
+                }
+            }
         }
+
+        return id;
     }
+
 }
 

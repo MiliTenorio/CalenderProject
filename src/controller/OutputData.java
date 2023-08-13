@@ -43,35 +43,26 @@ public class OutputData {
 	}
 	
 	//Simple informations
-	public static void showAllEvents(ControllerClass controller) {
+	/*public static void showAllEvents(ControllerClass controller) {
 		System.out.println("All Events:");
 		
 		for(Event eventList : controller.getAllEvents()) {
 			showSimpleEvent(eventList);
 		}
-	}
+	}*/
 	
 	//All informations
 	public static void showAllInfoEvents(ControllerClass controller) {
 		System.out.println("All Events:");
-		
-		for(Event eventList : controller.getEvents()) {
-			showSimpleEvent(eventList);
-		}
-		
-		for(HourEvent eventList : controller.getHourEvents()) {
-			showHourEvent(eventList);
-		}
-		
-		for(DurationEvent eventList : controller.getDurationEvents()) {
-			showDurationEvent(eventList);
-		}
+		showSimpleEvents(controller);
+		showHourEvents(controller);
+		showDurationEvents(controller);
 	}
 	
 	public static void showSimpleEvents(ControllerClass controller) {
 		System.out.println("All Simple Events:");
 		
-		for(Event eventList : controller.getEvents()) {
+		for(Event eventList : controller.getAllSimpleEvent()) {
 			showSimpleEvent(eventList);
 		}
 	}
@@ -79,7 +70,7 @@ public class OutputData {
 	public static void showHourEvents(ControllerClass controller) {
 		System.out.println("All Events with Time:");
 		
-		for(HourEvent eventList : controller.getHourEvents()) {
+		for(HourEvent eventList : controller.getAllHourEvent()) {
 			showHourEvent(eventList);
 		}
 	}
@@ -87,7 +78,7 @@ public class OutputData {
 	public static void showDurationEvents(ControllerClass controller) {
 		System.out.println("All Events with Initial and Final Time:");
 		
-		for(DurationEvent eventList : controller.getDurationEvents()) {
+		for(DurationEvent eventList : controller.getAllDurationEvent()) {
 			showDurationEvent(eventList);
 		}
 	}

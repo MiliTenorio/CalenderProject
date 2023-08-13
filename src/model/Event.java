@@ -19,6 +19,16 @@ public class Event {
 		this.nameEvent = name;
 	}
 	
+	public Event(Date date, String name) {
+		this.dateEvent = date;
+		this.nameEvent = name;
+	}
+	
+	public Event(String date, String name) {
+		this.dateEvent = controller.ParseData.convertStringToDate(date);
+		this.nameEvent = name;
+	}
+	
 	public int getId() {
 		return id;
 	}

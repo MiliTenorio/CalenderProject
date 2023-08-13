@@ -16,7 +16,7 @@ public class DataBase {
 	/*
 	 * About Simple Event
 	 */
-	public static boolean addEvent(Connection con, MySQLDatabase mySQLDatabase, Event event) {
+	public static boolean addEvent(MySQLDatabase mySQLDatabase, Event event) {
 
         try {        	
         	boolean rowsInserted;
@@ -37,8 +37,7 @@ public class DataBase {
         }
     }
 	
-	public static LinkedList<Event> readAllEvents(MySQLDatabase mySQLDatabase) {
-
+	public static LinkedList<Event> readAllSimpleEvent(MySQLDatabase mySQLDatabase) {
         try {        	
         	return mySQLDatabase.readAllSimpleEventTable();
         } catch (SQLException e) {
@@ -47,7 +46,7 @@ public class DataBase {
         }
     }
 	
-	public static Event readEvent(MySQLDatabase mySQLDatabase, int id) {
+	public static Event readSimpleEvent(MySQLDatabase mySQLDatabase, int id) {
 
         try {        	
         	return mySQLDatabase.readSimpleEvent(id);
@@ -80,11 +79,29 @@ public class DataBase {
             return false;
         }   
    }
+	
+	public static LinkedList<HourEvent> readAllHourEvent(MySQLDatabase mySQLDatabase) {
+        try {        	
+        	return mySQLDatabase.readAllHourEventTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+	}
+	
+	public static HourEvent readHourEvent(MySQLDatabase mySQLDatabase, int id) {
+        try {        	
+        	return mySQLDatabase.readHourEventTable(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	/*
 	 * About Duration Event
 	 */
-	public static boolean addEvent(Connection con, MySQLDatabase mySQLDatabase, DurationEvent event) {
+	public static boolean addEvent(MySQLDatabase mySQLDatabase, DurationEvent event) {
         try {        	
         	boolean rowsInserted;
 
@@ -103,4 +120,25 @@ public class DataBase {
             return false;
         }   
 	}
+
+
+
+	public static LinkedList<DurationEvent> readAllDurationEvent(MySQLDatabase mySQLDatabase) {
+        try {        	
+        	return mySQLDatabase.readAllDurationEventTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+	}
+	
+	public static DurationEvent readDurationEvent(MySQLDatabase mySQLDatabase, int id) {
+        return mySQLDatabase.readDurationEventTable(id);
+    }
+	
+	/*
+	 * Others methods
+	 */
+	
+
 }
