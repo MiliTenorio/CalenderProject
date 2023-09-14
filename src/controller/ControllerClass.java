@@ -18,13 +18,10 @@ import model.HourEvent;
 import model.MySQLDatabase;
 
 public class ControllerClass {	
-	//Until I don't finish my DB in MySQL, I'll use:
-	// >> LinkedList to be the Tables
-	LinkedList <Event>  events;
-	LinkedList <HourEvent> hourEvents;
-	LinkedList <DurationEvent> durationEvents;
-	// >> To be used as automatic iterator similar in SQL, this is important because of the foreign key
-	int id;
+	/*
+	 * The Controller Class is the intermediate between the View operation and the all process
+	 * Input, Output, Database and Model access others classes using the controller.
+	*/
 	
 	static MySQLDatabase mySQLDatabase;
 	
@@ -109,121 +106,86 @@ public class ControllerClass {
 	 */
 	
 	//Edit Event 
-	public boolean editEvent(Event editEvent, Event updateEvent) {
-		if(!this.events.contains(editEvent)) {
-			System.out.println("Event not found!");
-			return false;
-		}
-		
-		int index =	this.events.indexOf(editEvent);
-		this.events.set(index, updateEvent);
-		
-		if(this.events.contains(updateEvent)) {
-			System.out.println("Updated event!");
-			return true;
-		}
-		
-		System.out.println("Event not updated!");
+	public boolean updateEvent( Event updateEvent) {
+		 try (Connection con = mySQLDatabase.getConnection()) {
+	        	if(DataBase.updateSimpleEvent(mySQLDatabase, updateEvent.getId(), updateEvent)) {
+	        		return true;
+	        	}
+	        	else {
+	        		return false;
+	        	}
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 		return false;
 	}
 	
-	public boolean editEvent(HourEvent editEvent, HourEvent updateEvent) {
-		//Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
-		
-		if(/*!this.events.contains(editSimpleEvent) &&*/ !this.hourEvents.contains(editEvent)) {
-			System.out.println("Event not found!");
-			return false;
-		}
-
-		//This part of the code will resolve foreign key actions
-		//int indexSimple = this.events.indexOf(editSimpleEvent);
-		//Event updateSimpleEvent = new Event(editEvent.getId(), updateEvent.getDateEvent(),updateEvent.getNameEvent());
-		//this.events.set(indexSimple, updateSimpleEvent);
-		
-		int index = this.hourEvents.indexOf(editEvent);
-		this.hourEvents.set(index, updateEvent);
-		
-		if(/*this.events.contains(updateEvent) &&*/ this.hourEvents.contains(updateEvent)) {
-			System.out.println("Updated event!");
-			return true;
-		}
-			
+	public boolean updateEvent(HourEvent updateEvent) {
+		try (Connection con = mySQLDatabase.getConnection()) {
+        	if(DataBase.updateHourEvent(mySQLDatabase, updateEvent.getId(), updateEvent)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return false;
 	}
 	
-	public boolean editEvent(DurationEvent editEvent, DurationEvent updateEvent) {
-		//Event editSimpleEvent = new Event(editEvent.getId(), editEvent.getDateEvent(),editEvent.getNameEvent());
-		
-		if(/*!this.events.contains(editSimpleEvent) &&*/ !this.durationEvents.contains(editEvent)) {
-			System.out.println("Event not found!");
-			return false;
-		}
-
-		//This part of the code will resolve foreign key actions
-		//int indexSimple = this.events.indexOf(editSimpleEvent);
-		//Event updateSimpleEvent = new Event(editEvent.getId(), updateEvent.getDateEvent(),updateEvent.getNameEvent());
-		//this.events.set(indexSimple, updateSimpleEvent);
-		
-		int index = this.durationEvents.indexOf(editEvent);
-		this.durationEvents.set(index, updateEvent);
-		
-		if(/*this.events.contains(updateEvent) &&*/ this.durationEvents.contains(updateEvent)) {
-			System.out.println("Updated event!");
-			return true;
-		}
-			
+	public boolean updateEvent(DurationEvent updateEvent) {
+		try (Connection con = mySQLDatabase.getConnection()) {
+        	if(DataBase.updateDurationEvent(mySQLDatabase, updateEvent.getId(), updateEvent)) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }			
 		return false;
 	}
+	
+	/*
+	 * Others methods to support
+	 */
 	
 	public Event findSimpleEvent(int id) {
-		for(Event event : this.events) {
-			if(event.getId()==id) {
-				return event;
-			}
-		}
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readSimpleEvent(mySQLDatabase, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return null;
 	}
 	
 	public HourEvent findHourEvent(int id) {
-		for(HourEvent event : this.hourEvents) {
-			if(event.getId() == id) {
-				return event;
-			}
-		}
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readHourEvent(mySQLDatabase, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return null;
 	}
-	
-	public DurationEvent findDurationEvent(int id) {
-		for(DurationEvent event : this.durationEvents) {
-			if(event.getId()==id) {
-				return event;
-			}
-		}
+		
+	public DurationEvent findDurationEvent(int id) {		
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.readDurationEvent(mySQLDatabase, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		return null;
 	}
 
-	public boolean deleteSimpleEvent(int id, Event event) {
-		events.remove(id);
-		if(events.contains(event)) {
-			return false;
-		}
-		return true;
-	}
-
-	public boolean deleteHourEvent(int id, HourEvent event) {
-		hourEvents.remove(id);
-		if(hourEvents.contains(event)) {
-			return false;
-		}
-		return true;		
-	}
-
-	public boolean deleteDurationEvent(int id, DurationEvent event) {
-		durationEvents.remove(id);
-		if(durationEvents.contains(event)) {
-			return false;
-		}
-		return true;
+	public boolean deleteEvent(int id) {
+        try (Connection con = mySQLDatabase.getConnection()) {
+        	return DataBase.deleteEvent(mySQLDatabase, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return false;
 	}
 	
 }

@@ -1,28 +1,14 @@
 package controller;
 
-//import java.util.LinkedList;
-
 import model.DurationEvent;
 import model.Event;
 import model.HourEvent;
 
 public class OutputData {
-	
-	/*public static void showEvent(Object event) {
-		System.out.println("--------------------");
-		if(event instanceof Event) {
-			System.out.println("simple");
-			showSimpleEvent((Event) event);
-		}
-		else if(event instanceof HourEvent) {
-			System.out.println("hour");
-			showHourEvent((HourEvent) event);
-		}
-		else if(event instanceof Event) {
-			showDurationEvent((DurationEvent) event);
-		}
-		//System.out.println("--------------------");
-	}*/
+	/*
+	 * The OutputData is a class used to show all informations to user
+	 * All the models informations has templates here to be display
+	*/
 	
 	public static void showSimpleEvent(Event event) {
 		System.out.println("--------------------");
@@ -42,25 +28,16 @@ public class OutputData {
 		System.out.println("The final time of event: " + event.getFinalTime());
 	}
 	
-	//Simple informations
-	/*public static void showAllEvents(ControllerClass controller) {
-		System.out.println("All Events:");
-		
-		for(Event eventList : controller.getAllEvents()) {
-			showSimpleEvent(eventList);
-		}
-	}*/
-	
 	//All informations
 	public static void showAllInfoEvents(ControllerClass controller) {
-		System.out.println("All Events:");
+		System.out.println("\n All Events: \n");
 		showSimpleEvents(controller);
 		showHourEvents(controller);
 		showDurationEvents(controller);
 	}
 	
 	public static void showSimpleEvents(ControllerClass controller) {
-		System.out.println("All Simple Events:");
+		System.out.println("\n All Events: \n");
 		
 		for(Event eventList : controller.getAllSimpleEvent()) {
 			showSimpleEvent(eventList);
@@ -68,7 +45,7 @@ public class OutputData {
 	}
 	
 	public static void showHourEvents(ControllerClass controller) {
-		System.out.println("All Events with Time:");
+		System.out.println("\n All Events with Time: \n");
 		
 		for(HourEvent eventList : controller.getAllHourEvent()) {
 			showHourEvent(eventList);
@@ -76,31 +53,15 @@ public class OutputData {
 	}
 
 	public static void showDurationEvents(ControllerClass controller) {
-		System.out.println("All Events with Initial and Final Time:");
+		System.out.println("\n All Events with Initial and Final Time: \n");
 		
 		for(DurationEvent eventList : controller.getAllDurationEvent()) {
 			showDurationEvent(eventList);
 		}
 	}
-	
-	public static void showEvents(ControllerClass controller, int type) {
-		if(type == 0) {
-			//showAllEvents(controller);
-			showAllInfoEvents(controller);
-		}
 
-		switch (type) {
-		  	case 1:
-		  		showSimpleEvents(controller);
-		  		break;
-		  	case 2:
-		  		showHourEvents(controller);
-		  		break;
-		  	case 3:
-		  		showDurationEvents(controller);
-		  		break;
-		}
-		
+	public static void eventNotFind() {
+		System.out.println("Sorry! We don't find ID event");
 	}
 }
 

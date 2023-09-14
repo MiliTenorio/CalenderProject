@@ -11,6 +11,10 @@ import java.util.LinkedList;
 import controller.ParseData;
 
 public class MySQLDatabase {
+	/*
+	 * The Database in MySQL
+	 * Create the Database, Tables and all SQL commands
+	 */
 	
 	//Informations to connect database
     private String jdbcURL = "jdbc:mysql://localhost:3306/";
@@ -114,7 +118,7 @@ public class MySQLDatabase {
             }
         }
     }
-    
+        
     public boolean updateSimpleEvent(Event updateEvent, int id) throws SQLException {
         String updateSQL = "UPDATE simpleEventTable SET date = ?, name = ? WHERE id = ?";
         try (Connection connection = getConnection();
@@ -176,15 +180,17 @@ public class MySQLDatabase {
     
     public LinkedList<HourEvent> readAllHourEventTable() throws SQLException {
     	LinkedList<HourEvent> result = new LinkedList<HourEvent>();
-        String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.time FROM houreventtable t2 INNER JOIN "
+        String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.time, t2.foreign_id FROM houreventtable t2 INNER JOIN "
         		+ "simpleeventtable t1 ON t2.foreign_id = t1.id;";
        
         try (Connection connection = getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
                while (resultSet.next()) {
-            	             	   
-            	   result.add(new HourEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+
+            	   //Print
+            	   System.out.println("foreign_id: " + resultSet.getInt("foreign_id"));
+            	   result.add(new HourEvent(resultSet.getInt("foreign_id"), ParseData.convertStringToDate(resultSet.getString("date")),
             			   resultSet.getString("name"), resultSet.getString("time")));
                }
         }
@@ -193,15 +199,16 @@ public class MySQLDatabase {
     }
     
     public HourEvent readHourEventTable(int id) throws SQLException {
-        String selectSQL = "SELECT t1.name, t1.date, t2.time FROM houreventtable t2 INNER JOIN "
+        String selectSQL = "SELECT t1.name, t1.date, t2.time, t2.foreign_id FROM houreventtable t2 INNER JOIN "
         		+ "simpleeventtable t1 ON t2.foreign_id = t1.id  WHERE t2.foreign_id = " + id ;
        
         try (Connection connection = getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
                while (resultSet.next()) {
-            	             	   
-            	   return new HourEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            	   //Print
+            	   System.out.println("foreign_id: " + resultSet.getInt("foreign_id"));
+            	   return new HourEvent(resultSet.getInt("foreign_id"), ParseData.convertStringToDate(resultSet.getString("date")),
             			   resultSet.getString("name"), resultSet.getString("time"));
                }
         }
@@ -210,7 +217,7 @@ public class MySQLDatabase {
     }
 
     public boolean updateHourEvent(HourEvent event, int foreignId) throws SQLException {
-        String updateSQL = "UPDATE hourEventTable SET time = ? WHERE id = ?";
+        String updateSQL = "UPDATE hourEventTable SET time = ? WHERE foreign_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, event.time);
@@ -219,7 +226,7 @@ public class MySQLDatabase {
             
             boolean simpleEvent = updateSimpleEvent(event, foreignId);    
             
-            if(hourEvent > 0 && simpleEvent) {
+            if(hourEvent > 0 || simpleEvent) {
             	return true;
             }else {
             	return false;
@@ -227,12 +234,20 @@ public class MySQLDatabase {
         }
     }
 
-    public void deleteHourEvent(int id) throws SQLException {
-        String deleteSQL = "DELETE FROM hourEventTable WHERE id = ?";
+    public boolean deleteHourEvent(int id) throws SQLException {
+        String deleteSQL = "DELETE FROM hourEventTable WHERE foreign_id = ?";
+        int rows = -1;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL)) {
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            rows = preparedStatement.executeUpdate();
+        }
+        
+        if(rows > 0) {
+        	return true;
+        }
+        else {
+        	return false;
         }
     }
     
@@ -265,7 +280,7 @@ public class MySQLDatabase {
     
     public LinkedList<DurationEvent> readAllDurationEventTable() throws SQLException {
     	LinkedList<DurationEvent> result = new LinkedList<DurationEvent>();    	
-    	String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.initialTime, t2.finalTime FROM "
+    	String selectSQL = "SELECT t2.id, t1.name, t1.date, t2.initialTime, t2.finalTime, t2.foreign_id FROM "
     			+ "durationEventTable t2 INNER JOIN simpleEventTable t1 ON t2.foreign_id = t1.id;";
         
         try (Connection connection = getConnection();
@@ -273,7 +288,7 @@ public class MySQLDatabase {
                 ResultSet resultSet = preparedStatement.executeQuery()) {
                while (resultSet.next()) {
             	             	   
-            	   result.add(new DurationEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            	   result.add(new DurationEvent(resultSet.getInt("foreign_id"), ParseData.convertStringToDate(resultSet.getString("date")),
             			   resultSet.getString("name"), resultSet.getString("initialTime"), resultSet.getString("finalTime")));
                }
         }
@@ -282,14 +297,15 @@ public class MySQLDatabase {
     
 
 	public DurationEvent readDurationEventTable(int id) {
-		String selectSQL = "SELECT t1.name, t1.date, t2.initialTime, t2.finalTime FROM durationeventtable t2 INNER JOIN "
+		String selectSQL = "SELECT t1.name, t1.date, t2.initialTime, t2.finalTime, t2.foreign_id FROM durationeventtable t2 INNER JOIN "
         		+ "simpleeventtable t1 ON t2.foreign_id = t1.id  WHERE t2.foreign_id = " + id ;
         try (Connection connection = getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 ResultSet resultSet = preparedStatement.executeQuery()) {
                while (resultSet.next()) {
-            	             	   
-            	   return new DurationEvent(resultSet.getInt("id"), ParseData.convertStringToDate(resultSet.getString("date")),
+            	   //Print
+            	   System.out.println("foreign_id: " + resultSet.getInt("foreign_id"));
+            	   return new DurationEvent(resultSet.getInt("foreign_id"), ParseData.convertStringToDate(resultSet.getString("date")),
             			   resultSet.getString("name"), resultSet.getString("initialTime"), resultSet.getString("finalTime"));
                }
         } catch (SQLException e) {
@@ -301,7 +317,7 @@ public class MySQLDatabase {
 	}
 
     public boolean updateDurationEvent(DurationEvent event, int foreignId) throws SQLException {      
-        String updateSQL = "UPDATE durationEventTable SET incialTime = ?, finalTime = ? WHERE id = ?";
+        String updateSQL = "UPDATE durationEventTable SET initialTime = ?, finalTime = ? WHERE foreign_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, event.getInitialTime());
@@ -319,12 +335,20 @@ public class MySQLDatabase {
         }
     }
 
-    public void deleteDurationEvent(int id) throws SQLException {
-        String deleteSQL = "DELETE FROM durationEventTable WHERE id = ?";
+    public boolean deleteDurationEvent(int id) throws SQLException {
+        String deleteSQL = "DELETE FROM durationEventTable WHERE foreign_id = ?";
+        int rows = -1;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL)) {
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            rows = preparedStatement.executeUpdate();
+        }
+        
+        if(rows > 0) {
+        	return true;
+        }
+        else {
+        	return false;
         }
     }
     

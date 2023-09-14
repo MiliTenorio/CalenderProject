@@ -19,13 +19,14 @@ public class ValidationData {
 	}
 	
     public static boolean validationTime(String timeString) {
-        // Regular expression to match the "HH:mm" format
+        // Regular expression to match the "HH:MM" format
         String timePattern = "^([01]\\d|2[0-3]):[0-5]\\d$";
 
         // Use Pattern.matches() to check if the timeString matches the pattern
         return Pattern.matches(timePattern, timeString);
     }
 	
+    //Some methods to validate menu choices
 	public static boolean validationChoice(int choice) {
 		if(choice < -1 || choice > 4) {
 			return false;

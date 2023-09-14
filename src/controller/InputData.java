@@ -9,6 +9,11 @@ import model.DurationEvent;
 
 public class InputData {
 	
+	/*
+	 * InputData class responsible to receive data from console and send to controller the action 
+	 * the View Class are expect happens
+	 */
+	
     public static Date inputDate(Scanner scanner) {
         System.out.print("Enter a date (YYYY-MM-DD): ");
         String dateString = scanner.nextLine();
@@ -81,130 +86,49 @@ public class InputData {
     	scanner.nextLine();
     	return id;
     }
-    
-    public static void editingSimpleEvent(Scanner scanner, ControllerClass controller) {
-    	int id = inputId(scanner);
-    	Event originalEvent = controller.findSimpleEvent(id);
-    	
-    	Date date = inputDate(scanner);
-    	String name = inputName(scanner);
-    	
-    	Event editedEvent = new Event(originalEvent.getId(), date, name);
-    	
-    	controller.editEvent(originalEvent, editedEvent);
-    }
-
-	public static void editingHourEvent(Scanner scanner, ControllerClass controller) {
-    	int id = inputId(scanner);
-    	//Event originalEvent = controller.findSimpleEvent(id); > Will be change to find foreign key in SQL
-    	HourEvent originalEvent = controller.findHourEvent(id);
-    	
-    	Date date = inputDate(scanner);
-    	String name = inputName(scanner);
-    	String hour = inputHour(scanner);
-    	
-    	HourEvent editedEvent = new HourEvent(originalEvent.getId(), date, name, hour);
-    	
-    	controller.editEvent(originalEvent, editedEvent);
+	
+	public static void updateEvent(Scanner scanner, ControllerClass controller, int type) {
+		int id = inputId(scanner);
+		boolean update = false;
 		
+    	if(controller.findSimpleEvent(id) == null) {
+    		OutputData.eventNotFind();
+    		return;
+    	}
+
+		System.out.println("Let's edit!");
+    	switch (type) {
+  		case 0: //Simple Event
+  	    	update = controller.updateEvent(new Event(id, inputDate(scanner), inputName(scanner)));
+  	    	break;
+  		case 1:
+  			update = controller.updateEvent(new HourEvent(id, inputDate(scanner), inputName(scanner), inputHour(scanner)));
+  			break;
+  		case 2:
+  			update = controller.updateEvent(new DurationEvent(id, inputDate(scanner), inputName(scanner), inputHour(scanner), inputHour(scanner)));
+    	}
+    	    	
+    	if(update == true) {
+    		System.out.println("Event updated");
+    	}else {
+    		System.out.println(":( something wrong happens");
+    	}
 	}
 	
-	public static void editingDurationEvent(Scanner scanner, ControllerClass controller) {
-    	int id = inputId(scanner);
-    	//Event originalEvent = controller.findSimpleEvent(id); > Will be change to find foreign key in SQL
-    	DurationEvent originalEvent = controller.findDurationEvent(id);
-    	
-    	Date date = inputDate(scanner);
-    	String name = inputName(scanner);
-    	String initialHour = inputHour(scanner);
-    	String finalHour = inputHour(scanner);
-    	
-    	DurationEvent editedEvent = new DurationEvent(originalEvent.getId(), date, name, initialHour, finalHour);
-    	
-    	controller.editEvent(originalEvent, editedEvent);
+	public static void deleteEvent(Scanner scanner, ControllerClass controller) {
+		System.out.println("Let's delete!");
+		int id = inputId(scanner);
 		
-	}
+    	if(controller.findSimpleEvent(id) == null) {
+    		OutputData.eventNotFind();
+    		return;
+    	}
 
-	public static void deleteSimpleEvent(Scanner scanner, ControllerClass controller) {
-    	int idEvent = inputId(scanner);    
-		Event event = controller.findSimpleEvent(idEvent);
-		
-		if(event == null) {
-			System.out.println("Event not found!");
-			return;
-		}
-		
-		System.out.println("Are you sure you want to delete this event? Y/N");
-		OutputData.showSimpleEvent(event);
-		String delete = scanner.next();
-		
-		if(delete.equals("Y") || delete.equals("y")) {
-			int idList = controller.events.indexOf(event);
-			
-	    	if(controller.deleteSimpleEvent(idList,event)) {
-				System.out.println("Deleted!");
-	    	}else {
-				System.out.println("Not deleted");
-	    	}
-		}
-		else {
-			System.out.println("Request canceled");
-		}
-	}
-
-	public static void deleteHourEvent(Scanner scanner, ControllerClass controller) {
-    	int idEvent = inputId(scanner);    
-		HourEvent event = controller.findHourEvent(idEvent);
-		
-		if(event == null) {
-			System.out.println("Event not found!");
-			return;
-		}
-		
-		System.out.println("Are you sure you want to delete this event? Y/N");
-		OutputData.showSimpleEvent(event);
-		
-		String delete = scanner.nextLine();
-		
-		if(delete.equals("Y")|| delete.equals("y")) {
-			int idList = controller.hourEvents.indexOf(event);
-			
-	    	if(controller.deleteHourEvent(idList,event)) {
-				System.out.println("Deleted!");
-	    	}else {
-				System.out.println("Not deleted");
-	    	}
-		}
-		else {
-			System.out.println("Request canceled");
-		}	
-	}
-
-	public static void deleteDurationEvent(Scanner scanner, ControllerClass controller) {
-    	int idEvent = inputId(scanner);    
-		DurationEvent event = controller.findDurationEvent(idEvent);
-		
-		if(event == null) {
-			System.out.println("Event not found!");
-			return;
-		}
-		
-		System.out.println("Are you sure you want to delete this event? Y/N");
-		OutputData.showSimpleEvent(event);
-		String delete = scanner.nextLine();
-		
-		if(delete.equals("Y") || delete.equals("y")) {
-			int idList = controller.durationEvents.indexOf(event);
-			
-	    	if(controller.deleteDurationEvent(idList,event)) {
-				System.out.println("Deleted!");
-	    	}else {
-				System.out.println("Not deleted");
-	    	}
-		}
-		else {
-			System.out.println("Request canceled");
-		}	
+    	if(controller.deleteEvent(id)) {
+    		System.out.println("Event deleted");
+    	}else {
+    		System.out.println(":( something wrong happens");
+    	}
 	}
 	
 	public static boolean inputEventInformation(Scanner scan, ControllerClass controller) {
@@ -281,24 +205,68 @@ public class InputData {
 	  		case 0:
 	  			break;
 		  	case 1:
-		  		int id = InputData.inputId(scan);
-		  		OutputData.showSimpleEvent(theController.findSimpleEvent(id));
+		  		menuOneEvent(scan, theController);;
 		  		break;
 		  		
 		  	case 2:
-		  		OutputData.showEvents(theController, 0);
+		  		OutputData.showAllInfoEvents(theController);
 		  		break;
 		  		
 		  	case 3:
-		  		OutputData.showEvents(theController, 1);
+		  		OutputData.showSimpleEvents(theController);
 		  		break;
 		  		
 		  	case 4:
-		  		OutputData.showEvents(theController, 2);
+		  		OutputData.showHourEvents(theController);
 		  		break;
 		  		
 		  	case 5:
-		  		OutputData.showEvents(theController, 3);
+		  		OutputData.showDurationEvents(theController);
+		  		break;
+		  }
+		
+	}
+
+	private static void menuOneEvent(Scanner scan, ControllerClass theController) {
+		System.out.println("What is the type of this event?");
+	  	System.out.print("|--------------------------------------------|\n");
+	  	System.out.print("| 1 - Simple event                           |\n");
+	  	System.out.print("| 2 - Event with initial time                |\n");
+	  	System.out.print("| 3 - Event with inital and final time       |\n");
+	  	System.out.print("| 0 - Return to menu                         |\n");
+	  	System.out.print("|--------------------------------------------|\n");
+		
+	  	int option = scan.nextInt();
+		int id = InputData.inputId(scan);	  	
+
+	  	switch (option) {
+	  		case 0:
+	  			break;
+		  	case 1:
+		  		Event newEvent = theController.findSimpleEvent(id);
+		  		if(newEvent != null) {
+			  		OutputData.showSimpleEvent(newEvent);
+		  		}else {
+		  			OutputData.eventNotFind();
+		  		}
+		  		break;
+		  		
+		  	case 2:
+		  		HourEvent newHourEvent = theController.findHourEvent(id);
+		  		if(newHourEvent != null) {
+			  		OutputData.showHourEvent(newHourEvent);
+		  		}else {
+		  			OutputData.eventNotFind();
+		  		}
+		  		break;
+		  		
+		  	case 3:
+		  		DurationEvent newDurationEvent = theController.findDurationEvent(id);
+		  		if(newDurationEvent != null) {
+			  		OutputData.showDurationEvent(newDurationEvent);
+		  		}else {
+		  			OutputData.eventNotFind();
+		  		}
 		  		break;
 		  }
 		
